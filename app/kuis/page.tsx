@@ -4,8 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { Award, Brain, Trophy, CheckCircle, XCircle, Clock, AlertCircle, Gamepad2 } from "lucide-react"
+import { Award, Brain, Trophy, CheckCircle, XCircle, Clock, AlertCircle, Gamepad2, RefreshCw } from "lucide-react"
 import { useState, useEffect } from "react"
+
+// Supabase Configuration - CORRECTED
+const SUPABASE_URL = 'https://cpdauuxizabrvngkrdud.supabase.co'
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNwZGF1dXhpemFicnZuZ2tyZHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY3NTkwMjUsImV4cCI6MjA4MjMzNTAyNX0.9qU-oPst7QdZNWdT8hQke5pVGc2XvMWImI_tpeClX5A'
 
 // Chess Game Component
 function ChessGame({ onClose }: { onClose: () => void }) {
@@ -123,7 +127,6 @@ function ChessGame({ onClose }: { onClose: () => void }) {
   }
 
   const isKingInCheck = (board: string[][], player: 'white' | 'black'): boolean => {
-    // Cari posisi raja
     let kingPos: [number, number] | null = null
     const kingPiece = player === 'white' ? 'K' : 'k'
     
@@ -137,9 +140,8 @@ function ChessGame({ onClose }: { onClose: () => void }) {
       if (kingPos) break
     }
     
-    if (!kingPos) return false // Raja tidak ditemukan
+    if (!kingPos) return false
     
-    // Cek apakah ada bidak lawan yang bisa makan raja
     for (let row = 0; row < 8; row++) {
       for (let col = 0; col < 8; col++) {
         const piece = board[row][col]
@@ -148,7 +150,6 @@ function ChessGame({ onClose }: { onClose: () => void }) {
         const isPieceWhite = isWhitePiece(piece)
         const isPlayerWhite = player === 'white'
         
-        // Cek bidak lawan
         if (isPieceWhite !== isPlayerWhite) {
           if (isValidMove(board, [row, col], kingPos, piece)) {
             return true
@@ -161,7 +162,6 @@ function ChessGame({ onClose }: { onClose: () => void }) {
   }
 
   const wouldBeInCheck = (board: string[][], from: [number, number], to: [number, number], player: 'white' | 'black'): boolean => {
-    // Simulasi gerakan
     const testBoard = board.map(row => [...row])
     const piece = testBoard[from[0]][from[1]]
     testBoard[to[0]][to[1]] = piece
@@ -197,7 +197,6 @@ function ChessGame({ onClose }: { onClose: () => void }) {
     for (let r = 0; r < 8; r++) {
       for (let c = 0; c < 8; c++) {
         if (isValidMove(boardState, [row, col], [r, c], piece)) {
-          // Cek apakah gerakan ini akan membuat raja sendiri kena skak
           if (!wouldBeInCheck(boardState, [row, col], [r, c], player)) {
             moves.push([r, c])
           }
@@ -214,12 +213,10 @@ function ChessGame({ onClose }: { onClose: () => void }) {
   }
 
   const isCheckmate = (board: string[][], player: 'white' | 'black'): boolean => {
-    // Skakmat = Raja kena skak DAN tidak ada gerakan valid
     return isKingInCheck(board, player) && !hasValidMoves(board, player)
   }
 
   const isStalemate = (board: string[][], player: 'white' | 'black'): boolean => {
-    // Stalemate = Raja TIDAK kena skak tapi tidak ada gerakan valid
     return !isKingInCheck(board, player) && !hasValidMoves(board, player)
   }
 
@@ -262,13 +259,11 @@ function ChessGame({ onClose }: { onClose: () => void }) {
     const move = `${pieceName} ${String.fromCharCode(65 + fromCol)}${8 - fromRow} → ${String.fromCharCode(65 + toCol)}${8 - toRow}`
     setMoveHistory(prev => [...prev, move])
     
-    // Clear selection after move
     setSelectedSquare(null)
     setValidMoves([])
     
     const nextPlayer = currentPlayer === 'white' ? 'black' : 'white'
     
-    // Cek apakah pemain berikutnya dalam skak
     const inCheck = isKingInCheck(newBoard, nextPlayer)
     setIsInCheck(inCheck)
     
@@ -285,7 +280,6 @@ function ChessGame({ onClose }: { onClose: () => void }) {
       return
     }
     
-    // Update board and player BEFORE AI move
     setBoard(newBoard)
     setCurrentPlayer(nextPlayer)
     
@@ -309,7 +303,6 @@ function ChessGame({ onClose }: { onClose: () => void }) {
       
       setMoveHistory(prev => [...prev, move])
       
-      // Cek apakah pemain dalam skak setelah AI bergerak
       const inCheck = isKingInCheck(aiBoard, 'white')
       setIsInCheck(inCheck)
       
@@ -454,7 +447,6 @@ function ChessGame({ onClose }: { onClose: () => void }) {
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-3 gap-6">
-            {/* Chess Board */}
             <div className="md:col-span-2">
               <div className="inline-block border-4 border-primary rounded-lg overflow-hidden shadow-xl">
                 {board.map((row, rowIndex) => (
@@ -488,7 +480,6 @@ function ChessGame({ onClose }: { onClose: () => void }) {
               </div>
             </div>
 
-            {/* Game Info */}
             <div className="space-y-4">
               <Card>
                 <CardHeader>
@@ -572,39 +563,12 @@ function ChessGame({ onClose }: { onClose: () => void }) {
   )
 }
 
-// Main Quiz Component with Chess
+// Main Quiz Component
 export default function KuisPage() {
   const [showChess, setShowChess] = useState(false)
-  const [questions] = useState([
-    {
-      id: '1',
-      question: 'Kapan Universitas Gadjah Mada didirikan?',
-      options: [
-        { text: '17 Agustus 1945', value: 'A' },
-        { text: '19 Desember 1949', value: 'B' },
-        { text: '20 Mei 1908', value: 'C' },
-        { text: '2 Oktober 1950', value: 'D' }
-      ],
-      correct_answer: 'B',
-      explanation: 'UGM didirikan pada 19 Desember 1949',
-      category: 'Sejarah',
-      difficulty: 'easy'
-    },
-    {
-      id: '2',
-      question: 'Siapa pendiri Universitas Gadjah Mada?',
-      options: [
-        { text: 'Ir. Soekarno', value: 'A' },
-        { text: 'Prof. Dr. M. Sardjito', value: 'B' },
-        { text: 'Ki Hajar Dewantara', value: 'C' },
-        { text: 'Sultan Hamengkubuwono IX', value: 'D' }
-      ],
-      correct_answer: 'D',
-      explanation: 'UGM didirikan oleh Sultan Hamengkubuwono IX',
-      category: 'Sejarah',
-      difficulty: 'medium'
-    }
-  ])
+  const [questions, setQuestions] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
   const [showResult, setShowResult] = useState(false)
@@ -615,6 +579,72 @@ export default function KuisPage() {
   const [quizStarted, setQuizStarted] = useState(false)
   const [timeRemaining, setTimeRemaining] = useState(750)
   const [timerActive, setTimerActive] = useState(false)
+
+  // Fetch questions from Supabase
+  const fetchQuestions = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      
+      console.log('Fetching questions from Supabase...')
+      console.log('URL:', SUPABASE_URL)
+      
+      const response = await fetch(
+        `${SUPABASE_URL}/rest/v1/quiz_questions?select=*`,
+        {
+          method: 'GET',
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+          }
+        }
+      )
+
+      console.log('Response status:', response.status)
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('Error response:', errorText)
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
+      const data = await response.json()
+      console.log('Data received:', data.length, 'questions')
+      
+      if (!Array.isArray(data)) {
+        throw new Error('Data format tidak valid')
+      }
+
+      if (data.length === 0) {
+        setError('Belum ada pertanyaan di database')
+        setQuestions([])
+      } else {
+        setQuestions(data)
+        console.log(`✅ Loaded ${data.length} questions successfully!`)
+      }
+      
+    } catch (err: any) {
+      console.error('Fetch error:', err)
+      setError(err.message || 'Gagal mengambil data dari database')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchQuestions()
+
+    // Auto-refresh setiap 30 detik untuk mendapatkan pertanyaan terbaru
+    const interval = setInterval(() => {
+      if (!quizStarted) {
+        fetchQuestions()
+      }
+    }, 30000)
+
+    return () => clearInterval(interval)
+  }, [quizStarted])
 
   useEffect(() => {
     let interval: NodeJS.Timeout
@@ -661,6 +691,11 @@ export default function KuisPage() {
   }
 
   const startQuiz = () => {
+    if (questions.length === 0) {
+      setError('Tidak ada pertanyaan yang tersedia')
+      return
+    }
+
     setQuizStarted(true)
     setCurrentQuestionIndex(0)
     setScore(0)
@@ -704,18 +739,76 @@ export default function KuisPage() {
     }
   }
 
-  const currentQuestion = questions[currentQuestionIndex]
-  const progress = ((currentQuestionIndex + 1) / questions.length) * 100
-
   if (showChess) {
     return <ChessGame onClose={() => setShowChess(false)} />
   }
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-12">
+        <div className="max-w-2xl mx-auto">
+          <Card>
+            <CardContent className="py-12">
+              <div className="text-center space-y-4">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+                <p className="text-lg text-muted-foreground">Memuat pertanyaan dari database...</p>
+                <p className="text-sm text-muted-foreground">Mohon tunggu sebentar...</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
+  // Error state
+  if (error && questions.length === 0) {
+    return (
+      <div className="container mx-auto px-4 py-12">
+        <div className="max-w-2xl mx-auto">
+          <Card className="border-destructive">
+            <CardHeader>
+              <CardTitle className="text-destructive flex items-center gap-2">
+                <AlertCircle className="h-6 w-6" />
+                Terjadi Kesalahan
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
+                <p className="text-sm font-mono text-destructive">{error}</p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-sm text-muted-foreground">Kemungkinan penyebab:</p>
+                <ul className="text-sm text-muted-foreground list-disc list-inside space-y-1">
+                  <li>Koneksi internet bermasalah</li>
+                  <li>RLS (Row Level Security) aktif tanpa policy</li>
+                  <li>Belum ada data di tabel quiz_questions</li>
+                </ul>
+              </div>
+              <Button 
+                onClick={fetchQuestions} 
+                variant="outline"
+                className="w-full"
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Coba Lagi
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
+  const currentQuestion = questions[currentQuestionIndex]
+  const progress = ((currentQuestionIndex + 1) / questions.length) * 100
 
   if (!quizStarted) {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center mb-12 space-y-4">
-          <Badge className="bg-accent text-accent-foreground mb-4">Kuis Interaktif</Badge>
+          <Badge className="bg-accent text-accent-foreground mb-4">Kuis Interaktif • Realtime Database</Badge>
           <h1 className="text-4xl md:text-5xl font-bold text-balance">Kuis Pengetahuan UGM</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed">
             Uji pemahamanmu tentang Universitas Gadjah Mada! Jawab pertanyaan seputar sejarah, fakultas, wawasan, dan kehidupan kampus di UGM.
@@ -786,6 +879,15 @@ export default function KuisPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <div className="text-sm text-left">
+                    <p className="font-semibold text-green-800 mb-1">Connected! ✅</p>
+                    <p className="text-green-700">{questions.length} pertanyaan berhasil dimuat, please prepare your self, semangat !!!</p>
+                  </div>
+                </div>
+              </div>
               <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
                 <div className="flex items-start gap-3">
                   <AlertCircle className="h-5 w-5 text-orange-600 flex-shrink-0 mt-0.5" />
@@ -795,18 +897,23 @@ export default function KuisPage() {
                       <li>• Timer akan dimulai saat kamu klik tombol di bawah</li>
                       <li>• Kuis akan otomatis selesai jika waktu habis</li>
                       <li>• Pastikan koneksi internet stabil</li>
+                      <li>• Pertanyaan diambil langsung dari database realtime</li>
                     </ul>
                   </div>
                 </div>
               </div>
-              <Button size="lg" onClick={startQuiz} className="w-full">
+              <Button 
+                size="lg" 
+                onClick={startQuiz} 
+                className="w-full"
+                disabled={questions.length === 0}
+              >
                 <Clock className="h-5 w-5 mr-2" />
                 Mulai Kuis Sekarang
               </Button>
             </CardContent>
           </Card>
 
-          {/* Chess Game Button */}
           <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-accent/5">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 justify-center">
@@ -995,7 +1102,7 @@ export default function KuisPage() {
             <CardTitle className="text-2xl text-balance leading-tight">{currentQuestion.question}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {currentQuestion.options.map((option) => (
+            {currentQuestion.options.map((option: any) => (
               <Button
                 key={option.value}
                 variant={selectedAnswer === option.value ? "default" : "outline"}
