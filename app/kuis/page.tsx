@@ -808,7 +808,7 @@ export default function KuisPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center mb-12 space-y-4">
-          <Badge className="bg-accent text-accent-foreground mb-4">Kuis Interaktif • Realtime Database</Badge>
+          <Badge className="bg-accent text-accent-foreground mb-4">Kuis Interaktif dan Game</Badge>
           <h1 className="text-4xl md:text-5xl font-bold text-balance">Kuis Pengetahuan UGM</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed">
             Uji pemahamanmu tentang Universitas Gadjah Mada! Jawab pertanyaan seputar sejarah, fakultas, wawasan, dan kehidupan kampus di UGM.
