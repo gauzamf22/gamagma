@@ -469,10 +469,14 @@ function ChessGame({ onClose }: { onClose: () => void }) {
                           key={colIndex}
                           onClick={() => handleSquareClick(rowIndex, colIndex)}
                           className={`
-                            w-12 h-12 md:w-16 md:h-16 flex items-center justify-center text-3xl md:text-4xl cursor-pointer
+                            w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16
+                            flex items-center justify-center 
+                            text-2xl sm:text-3xl md:text-3xl lg:text-4xl 
+                            cursor-pointer transition-all
                             ${isLight ? 'bg-amber-200' : 'bg-amber-700'}
-                            ${isSelected ? 'ring-4 ring-blue-500' : ''}
-                            ${isValidMove ? 'ring-4 ring-green-400' : ''}
+                            ${isSelected ? 'ring-2 sm:ring-4 ring-blue-500' : ''}
+                            ${isValidMove ? 'ring-2 sm:ring-4 ring-green-400' : ''}
+                            hover:brightness-110
                           `}
                         >
                           {piece && getPieceSymbol(piece)}
