@@ -897,7 +897,6 @@ export default function KuisPage() {
                       <li>• Timer akan dimulai saat kamu klik tombol di bawah</li>
                       <li>• Kuis akan otomatis selesai jika waktu habis</li>
                       <li>• Pastikan koneksi internet stabil</li>
-                      <li>• Pertanyaan diambil langsung dari database realtime</li>
                     </ul>
                   </div>
                 </div>
@@ -960,7 +959,7 @@ export default function KuisPage() {
       resultColor = "text-muted-foreground"
     }
 
-    const timeTaken = 750 - timeRemaining
+    const timeTaken = 600 - timeRemaining
     const timeTakenMinutes = Math.floor(timeTaken / 60)
     const timeTakenSeconds = timeTaken % 60
 
