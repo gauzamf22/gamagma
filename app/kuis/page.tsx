@@ -996,11 +996,308 @@ export default function KuisPage() {
                     <h3 className="text-2xl font-bold text-accent">🎉 Selamat! 🎉</h3>
                     <p className="text-lg font-semibold">Kamu Mendapatkan Sertifikat!</p>
                     <p className="text-sm text-muted-foreground">
-                      Nilai sempurna menunjukkan kamu sangat paham tentang UGM
+                      Nilai sempurna menunjukkan kamu sangat paham tentang UGM dan siap jadi mahasiswa UGM tahun ini !
                     </p>
                   </div>
                 </div>
               )}
+
+              {percentage === 100 && (
+  <div className="space-y-6">
+    <div 
+      id="certificate" 
+      className="border-8 border-amber-600 rounded-lg p-12 bg-gradient-to-br from-amber-50 to-yellow-50 relative overflow-hidden"
+      style={{ minHeight: '500px' }}
+    >
+      <div className="absolute top-0 left-0 w-full h-full opacity-5">
+        <div className="absolute top-4 left-4 text-8xl">🏆</div>
+        <div className="absolute top-4 right-4 text-8xl">🎓</div>
+        <div className="absolute bottom-4 left-4 text-8xl">⭐</div>
+        <div className="absolute bottom-4 right-4 text-8xl">📚</div>
+      </div>
+      
+      <div className="relative z-10 text-center space-y-6">
+        <div className="space-y-2">
+          <Trophy className="h-20 w-20 text-amber-600 mx-auto mb-4" />
+          <h2 className="text-5xl font-bold text-amber-800" style={{ fontFamily: 'serif' }}>
+            SERTIFIKAT
+          </h2>
+          <p className="text-xl text-amber-700">Penghargaan Kuis</p>
+        </div>
+
+        <div className="h-1 w-48 bg-amber-600 mx-auto"></div>
+
+        <div className="space-y-4 py-6">
+          <p className="text-lg text-gray-700">Diberikan kepada:</p>
+          <p className="text-4xl font-bold text-amber-900" style={{ fontFamily: 'serif' }}>
+            {'Calon Gamada 2026!'}
+          </p>
+        </div>
+
+        <div className="space-y-3 bg-white/50 rounded-lg p-6 mx-auto max-w-md">
+          <p className="text-gray-700 text-sm">
+            Telah berhasil menyelesaikan
+          </p>
+          <p className="text-2xl font-bold text-primary">
+            Kuis Pengetahuan UGM
+          </p>
+          <p className="text-gray-700 text-sm">
+            dengan nilai sempurna
+          </p>
+          <div className="flex items-center justify-center gap-3 pt-2">
+            <div className="text-center">
+              <p className="text-5xl font-bold text-accent">100</p>
+              <p className="text-sm text-gray-600">Poin</p>
+            </div>
+            <div className="text-4xl text-amber-500">★</div>
+            <div className="text-center">
+              <p className="text-3xl font-bold text-primary">{score}/{questions.length}</p>
+              <p className="text-sm text-gray-600">Benar</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="pt-6">
+          <p className="text-sm text-gray-600">
+            Diterbitkan pada {new Date().toLocaleDateString('id-ID', { 
+              day: 'numeric', 
+              month: 'long', 
+              year: 'numeric' 
+            })}
+          </p>
+        </div>
+
+        <div className="flex justify-center items-center gap-12 pt-6">
+          <div className="text-center">
+            <div className="h-20 flex items-end justify-center mb-2">
+              <div className="h-0.5 w-32 bg-gray-400"></div>
+            </div>
+            <p className="text-sm font-semibold text-gray-700">Gamagma</p>
+            <p className="text-xs text-gray-500">Kuis UGM</p>
+          </div>
+        </div>
+
+        <div className="pt-4">
+          <div className="inline-block px-6 py-2 border-2 border-amber-600 rounded-full">
+            <p className="text-sm font-bold text-amber-800">
+              🏆 PERFECT SCORE ACHIEVEMENT 🏆
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div className="flex gap-3 justify-center">
+      <Button 
+        onClick={() => {
+          const cert = document.getElementById('certificate')
+          if (cert) {
+            const printWindow = window.open('', '', 'width=800,height=600')
+            if (printWindow) {
+              printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                  <title>Sertifikat Kuis UGM</title>
+                  <style>
+                    @page { 
+                      size: 8.5in 13in;
+                      margin: 20mm;
+                    }
+                    body {
+                      margin: 0;
+                      padding: 20px;
+                      font-family: system-ui, -apple-system, sans-serif;
+                    }
+                    #certificate {
+                      border: 16px solid #d97706;
+                      border-radius: 12px;
+                      padding: 60px;
+                      background: linear-gradient(to bottom right, #fffbeb, #fef3c7);
+                      min-height: 500px;
+                      position: relative;
+                      overflow: hidden;
+                    }
+                    .opacity-5 { opacity: 0.05; }
+                    .absolute { position: absolute; }
+                    .relative { position: relative; }
+                    .top-0 { top: 0; }
+                    .left-0 { left: 0; }
+                    .right-4 { right: 1rem; }
+                    .top-4 { top: 1rem; }
+                    .bottom-4 { bottom: 1rem; }
+                    .left-4 { left: 1rem; }
+                    .text-8xl { font-size: 6rem; }
+                    .w-full { width: 100%; }
+                    .h-full { height: 100%; }
+                    .z-10 { z-index: 10; }
+                    .text-center { text-align: center; }
+                    .space-y-6 > * + * { margin-top: 1.5rem; }
+                    .space-y-2 > * + * { margin-top: 0.5rem; }
+                    .space-y-4 > * + * { margin-top: 1rem; }
+                    .space-y-3 > * + * { margin-top: 0.75rem; }
+                    .h-20 { height: 5rem; }
+                    .w-20 { width: 5rem; }
+                    .text-amber-600 { color: #d97706; }
+                    .mx-auto { margin-left: auto; margin-right: auto; }
+                    .mb-4 { margin-bottom: 1rem; }
+                    .text-5xl { font-size: 3rem; }
+                    .font-bold { font-weight: 700; }
+                    .text-amber-800 { color: #92400e; }
+                    .text-xl { font-size: 1.25rem; }
+                    .text-amber-700 { color: #b45309; }
+                    .h-1 { height: 0.25rem; }
+                    .w-48 { width: 12rem; }
+                    .bg-amber-600 { background-color: #d97706; }
+                    .py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+                    .text-lg { font-size: 1.125rem; }
+                    .text-gray-700 { color: #374151; }
+                    .text-4xl { font-size: 2.25rem; }
+                    .text-amber-900 { color: #78350f; }
+                    .bg-white\\/50 { background-color: rgba(255, 255, 255, 0.5); }
+                    .rounded-lg { border-radius: 0.5rem; }
+                    .p-6 { padding: 1.5rem; }
+                    .max-w-md { max-width: 28rem; }
+                    .text-sm { font-size: 0.875rem; }
+                    .text-2xl { font-size: 1.5rem; }
+                    .text-primary { color: #3b82f6; }
+                    .flex { display: flex; }
+                    .items-center { align-items: center; }
+                    .justify-center { justify-content: center; }
+                    .gap-3 { gap: 0.75rem; }
+                    .pt-2 { padding-top: 0.5rem; }
+                    .text-accent { color: #10b981; }
+                    .text-gray-600 { color: #4b5563; }
+                    .text-3xl { font-size: 1.875rem; }
+                    .text-amber-500 { color: #f59e0b; }
+                    .pt-6 { padding-top: 1.5rem; }
+                    .gap-12 { gap: 3rem; }
+                    .items-end { align-items: flex-end; }
+                    .mb-2 { margin-bottom: 0.5rem; }
+                    .h-0\\.5 { height: 0.125rem; }
+                    .w-32 { width: 8rem; }
+                    .bg-gray-400 { background-color: #9ca3af; }
+                    .font-semibold { font-weight: 600; }
+                    .text-xs { font-size: 0.75rem; }
+                    .text-gray-500 { color: #6b7280; }
+                    .pt-4 { padding-top: 1rem; }
+                    .inline-block { display: inline-block; }
+                    .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+                    .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+                    .border-2 { border-width: 2px; }
+                    .border-amber-600 { border-color: #d97706; }
+                    .rounded-full { border-radius: 9999px; }
+                    svg { display: inline-block; vertical-align: middle; }
+                  </style>
+                </head>
+                <body>
+                  ${cert.outerHTML}
+                  <script>
+                    window.onload = function() {
+                      window.print();
+                      setTimeout(function() { window.close(); }, 100);
+                    }
+                  </script>
+                </body>
+                </html>
+              `)
+              printWindow.document.close()
+            }
+          }
+        }}
+        size="lg"
+        className="max-w-xs"
+      >
+        <Award className="h-5 w-5 mr-2" />
+        Print Sertifikat
+      </Button>
+      
+      <Button 
+        onClick={() => {
+          const cert = document.getElementById('certificate')
+          if (cert) {
+            // Create canvas manually
+            const canvas = document.createElement('canvas')
+            const ctx = canvas.getContext('2d')
+            
+            if (ctx) {
+              // Set canvas size
+              canvas.width = cert.offsetWidth * 2
+              canvas.height = cert.offsetHeight * 2
+              
+              // Draw background
+              ctx.fillStyle = '#fffbeb'
+              ctx.fillRect(0, 0, canvas.width, canvas.height)
+              
+              // Draw border
+              ctx.strokeStyle = '#d97706'
+              ctx.lineWidth = 16
+              ctx.strokeRect(8, 8, canvas.width - 16, canvas.height - 16)
+              
+              // Draw text
+              ctx.fillStyle = '#78350f'
+              ctx.font = 'bold 96px serif'
+              ctx.textAlign = 'center'
+              ctx.fillText('SERTIFIKAT', canvas.width / 2, 180)
+              
+              ctx.font = '32px sans-serif'
+              ctx.fillText('Penghargaan kuis', canvas.width / 2, 240)
+              
+              ctx.font = '28px sans-serif'
+              ctx.fillStyle = '#374151'
+              ctx.fillText('Diberikan kepada:', canvas.width / 2, 340)
+              
+              ctx.font = 'bold 72px serif'
+              ctx.fillStyle = '#78350f'
+              ctx.fillText('Calon Gamada 2026', canvas.width / 2, 430)
+              
+              ctx.font = '24px sans-serif'
+              ctx.fillStyle = '#374151'
+              ctx.fillText('Telah berhasil menyelesaikan', canvas.width / 2, 520)
+              
+              ctx.font = 'bold 48px sans-serif'
+              ctx.fillStyle = '#78350f'
+              ctx.fillText('Kuis Pengetahuan UGM', canvas.width / 2, 590)
+              
+              ctx.font = '24px sans-serif'
+              ctx.fillStyle = '#78350f'
+              ctx.fillText('dengan nilai sempurna', canvas.width / 2, 640)
+              
+              ctx.font = 'bold 96px sans-serif'
+              ctx.fillStyle = '#78350f'
+              ctx.fillText('100', canvas.width / 2, 760)
+              
+              ctx.font = '28px sans-serif'
+              ctx.fillStyle = '#78350f'
+              ctx.fillText(`${score}/${questions.length} Benar`, canvas.width / 2, 810)
+              
+              ctx.font = '20px sans-serif'
+              ctx.fillStyle = '#6b7280'
+              const date = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
+              ctx.fillText(`Diterbitkan pada ${date}`, canvas.width / 2, 920)
+              
+              ctx.font = 'bold 24px sans-serif'
+              ctx.fillStyle = '#d97706'
+              ctx.fillText('🏆 PERFECT SCORE ACHIEVEMENT 🏆', canvas.width / 2, 1000)
+              
+              // Download
+              const link = document.createElement('a')
+              link.download = 'Sertifikat-Kuis-UGM.png'
+              link.href = canvas.toDataURL('image/png')
+              link.click()
+            }
+          }
+        }}
+        size="lg"
+        variant="outline"
+        className="max-w-xs"
+      >
+        <Award className="h-5 w-5 mr-2" />
+        Download PNG
+      </Button>
+    </div>
+  </div>
+)}
 
               <div className="space-y-2">
                 <h3 className="font-semibold">Ringkasan Jawaban:</h3>
