@@ -122,6 +122,8 @@ export default function ProfilePage() {
 
       setProfile((prev) => prev ? { ...prev, avatar_url: publicUrl } : null)
       setMessage({ type: "success", text: "Foto profil berhasil diperbarui" })
+
+      router.refresh()
     } catch (error: any) {
       setMessage({ type: "error", text: error.message || "Gagal mengunggah foto" })
     } finally {
@@ -163,6 +165,7 @@ export default function ProfilePage() {
 
       setProfile((prev) => prev ? { ...prev, full_name: fullName, username } : null)
       setMessage({ type: "success", text: "Profil berhasil diperbarui" })
+      router.refresh()
     } catch (error: any) {
       setMessage({ type: "error", text: error.message || "Gagal memperbarui profil" })
     } finally {
