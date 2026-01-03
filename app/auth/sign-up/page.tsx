@@ -1,17 +1,15 @@
 "use client"
 
 import type React from "react"
-
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { AlertCircle } from "lucide-react"
+import { AlertCircle, CheckCircle2 } from "lucide-react"
 
 export default function SignUpPage() {
   const [fullName, setFullName] = useState("")
@@ -19,15 +17,19 @@ export default function SignUpPage() {
   const [password, setPassword] = useState("")
   const [repeatPassword, setRepeatPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const [loadingMessage, setLoadingMessage] = useState("Memproses...")
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
     const supabase = createClient()
     setIsLoading(true)
     setError(null)
+    setSuccess(false)
+    setLoadingMessage("Memproses...")
 
+    // Validation
     if (password !== repeatPassword) {
       setError("Password tidak cocok")
       setIsLoading(false)
@@ -41,23 +43,110 @@ export default function SignUpPage() {
     }
 
     try {
-      const { error } = await supabase.auth.signUp({
+      console.log('🔄 Starting sign up...')
+      
+      // 1. Sign up user
+      const { data: authData, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${window.location.origin}/`,
           data: {
             full_name: fullName,
-            role: "student",
           },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       })
-      if (error) throw error
-      router.push("/auth/sign-up-success")
+
+      console.log('✅ Sign up response:', authData)
+
+      if (signUpError) throw signUpError
+
+      if (!authData.user) {
+        throw new Error("Registrasi gagal")
+      }
+
+      if (authData.session) {
+        // Email confirmation is disabled - auto login successful
+        console.log('✅ Auto login successful!')
+        setSuccess(true)
+        
+        // 2. Wait for trigger to create profile
+        setLoadingMessage("Menyiapkan profil...")
+        console.log('⏳ Waiting for profile creation...')
+        await new Promise(resolve => setTimeout(resolve, 2000))
+        
+        // 3. Check if profile exists (max 5 attempts, 1 second each)
+        let profileExists = false
+        let attempts = 0
+        const maxAttempts = 5
+        
+        while (!profileExists && attempts < maxAttempts) {
+          setLoadingMessage(`Memeriksa profil... (${attempts + 1}/${maxAttempts})`)
+          
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('id', authData.user.id)
+            .single()
+          
+          if (profile) {
+            console.log('✅ Profile found!')
+            profileExists = true
+          } else {
+            console.log(`⏳ Profile not found yet, attempt ${attempts + 1}/${maxAttempts}`)
+            attempts++
+            if (attempts < maxAttempts) {
+              await new Promise(resolve => setTimeout(resolve, 1000))
+            }
+          }
+        }
+        
+        // 4. If profile still doesn't exist, create manually
+        if (!profileExists) {
+          console.log('⚠️ Profile not created by trigger, creating manually...')
+          setLoadingMessage("Membuat profil...")
+          
+          const { error: createError } = await supabase
+            .from('profiles')
+            .insert({
+              id: authData.user.id,
+              email: email,
+              full_name: fullName,
+              role: 'user',
+              avatar_url: null,
+            })
+          
+          if (createError) {
+            console.error('❌ Manual profile creation error:', createError)
+          } else {
+            console.log('✅ Profile created manually!')
+          }
+        }
+        
+        // 5. Redirect to homepage
+        setLoadingMessage("Mengalihkan ke beranda...")
+        console.log('🚀 Redirecting to homepage...')
+        
+        setTimeout(() => {
+          window.location.href = "/"
+        }, 1000)
+        
+      } else {
+        // No session means email confirmation is needed (shouldn't happen)
+        console.log('⚠️ No session created, redirecting to login...')
+        setSuccess(true)
+        setLoadingMessage("Mengalihkan ke halaman login...")
+        
+        setTimeout(() => {
+          window.location.href = "/auth/login"
+        }, 2000)
+      }
+
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "Terjadi kesalahan saat mendaftar")
-    } finally {
+      console.error("❌ Sign up error:", error)
+      setError(error instanceof Error ? error.message : "Terjadi kesalahan saat registrasi")
       setIsLoading(false)
+      setLoadingMessage("Memproses...")
     }
   }
 
@@ -81,6 +170,7 @@ export default function SignUpPage() {
                     required
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
+                    disabled={isLoading || success}
                   />
                 </div>
                 <div className="grid gap-2">
@@ -92,6 +182,7 @@ export default function SignUpPage() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    disabled={isLoading || success}
                   />
                 </div>
                 <div className="grid gap-2">
@@ -103,6 +194,7 @@ export default function SignUpPage() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    disabled={isLoading || success}
                   />
                 </div>
                 <div className="grid gap-2">
@@ -114,16 +206,28 @@ export default function SignUpPage() {
                     required
                     value={repeatPassword}
                     onChange={(e) => setRepeatPassword(e.target.value)}
+                    disabled={isLoading || success}
                   />
                 </div>
+                
                 {error && (
-                  <Alert variant="destructive">
+                  <Alert variant="destructive" className="animate-in fade-in-0 slide-in-from-top-2 duration-300">
                     <AlertCircle className="h-4 w-4" />
                     <AlertDescription>{error}</AlertDescription>
                   </Alert>
                 )}
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Memproses..." : "Daftar"}
+                
+                {success && (
+                  <Alert className="border-green-500 bg-green-50 text-green-900 animate-in fade-in-0 slide-in-from-top-2 duration-300">
+                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    <AlertDescription className="text-green-800">
+                      Registrasi berhasil! Mengalihkan ke beranda...
+                    </AlertDescription>
+                  </Alert>
+                )}
+                
+                <Button type="submit" className="w-full" disabled={isLoading || success}>
+                  {isLoading ? loadingMessage : success ? "Berhasil! ✓" : "Daftar"}
                 </Button>
               </div>
               <div className="mt-4 text-center text-sm">
