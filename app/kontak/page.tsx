@@ -1,22 +1,87 @@
+"use client"
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Phone, MessageCircle, MapPin, Users } from "lucide-react"
 import Image from "next/image"
-import { createClient } from "@/lib/supabase/server"
-import { redirect } from "next/navigation"
+import { useEffect, useRef, useState } from "react"
 
-export default async function KontakPage() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+function AnimatedSection({ children, className = "" }) {
+  const [isVisible, setIsVisible] = useState(false)
+  const ref = useRef(null)
 
-  if (!user) {
-    redirect("/auth/login")
-  }
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting)
+      },
+      { threshold: 0.1 }
+    )
 
+    if (ref.current) {
+      observer.observe(ref.current)
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current)
+      }
+    }
+  }, [])
+
+  return (
+    <div
+      ref={ref}
+      className={`transition-all duration-1000 ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"
+      } ${className}`}
+    >
+      {children}
+    </div>
+  )
+}
+
+function StaggeredCard({ children, index }) {
+  const [isVisible, setIsVisible] = useState(false)
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    if (ref.current) {
+      observer.observe(ref.current)
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current)
+      }
+    }
+  }, [])
+
+  return (
+    <div
+      ref={ref}
+      className={`transition-all duration-700 ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"
+      }`}
+      style={{ transitionDelay: `${index * 100}ms` }}
+    >
+      {children}
+    </div>
+  )
+}
+
+export default function KontakPage() {
   const contactPersons = [
     {
       id: 1,
@@ -162,137 +227,146 @@ export default async function KontakPage() {
       whatsapp: "+62 822-1170-2006",
       photo_url: "/images/robitho.jpeg",
     },
-
   ]
 
   return (
     <div className="container mx-auto px-4 py-12">
-      <div className="text-center mb-12 space-y-4">
-        <div className="flex justify-center mb-4">
-          <Image
-            src="/images/maskot-simaster.png"
-            alt="SIMASTER Mascot"
-            width={120}
-            height={120}
-            className="w-32 h-32"
-          />
+      {/* Hero Section */}
+      <AnimatedSection>
+        <div className="text-center mb-12 space-y-4">
+          <div className="flex justify-center mb-4">
+            <Image
+              src="/images/maskot-simaster.png"
+              alt="SIMASTER Mascot"
+              width={120}
+              height={120}
+              className="w-32 h-32"
+            />
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold text-balance">Contact Person Gamagma</h1>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed">
+            Hubungi kakak-kakak Gamagma (Gadjah Mada-MAN 2 Kota Malang) yang siap membantu perjalananmu menuju UGM
+          </p>
         </div>
-        <h1 className="text-4xl md:text-5xl font-bold text-balance">Contact Person Gamagma</h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed">
-          Hubungi kakak-kakak Gamagma (Gadjah Mada-MAN 2 Kota Malang) yang siap membantu perjalananmu menuju UGM
-        </p>
-      </div>
+      </AnimatedSection>
 
       {/* Info Cards */}
-      <div className="grid md:grid-cols-3 gap-6 mb-12">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Users className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-primary">{contactPersons?.length || 0}</p>
-                <p className="text-sm text-muted-foreground">Contact Person</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <div className="h-12 w-12 rounded-lg bg-accent/10 flex items-center justify-center">
-                <MessageCircle className="h-6 w-6 text-accent" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-primary">24/7</p>
-                <p className="text-sm text-muted-foreground">Siap Membantu</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                <MapPin className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-primary">Yogyakarta</p>
-                <p className="text-sm text-muted-foreground">Lokasi Kampus</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Contact Persons Grid */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {contactPersons?.map((person) => (
-          <Card key={person.id} className="hover:shadow-lg transition-shadow">
-            <CardHeader className="text-center pb-4">
-              <div className="flex justify-center mb-4">
-                <Avatar className="h-24 w-24">
-                  <AvatarImage src={person.photo_url || undefined} alt={person.name} />
-                  <AvatarFallback className="bg-primary text-primary-foreground text-2xl">
-                    {person.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")
-                      .toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-              </div>
-              <CardTitle className="text-xl">{person.name}</CardTitle>
-              <CardDescription className="flex justify-center gap-2 mt-2">
-                <Badge variant="default">{person.role}</Badge>
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {person.location && (
-                <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                  <MapPin className="h-4 w-4 flex-shrink-0" />
-                  <span>{person.location}</span>
+      <AnimatedSection>
+        <div className="grid md:grid-cols-3 gap-6 mb-12">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4">
+                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Users className="h-6 w-6 text-primary" />
                 </div>
-              )}
-              {person.whatsapp && (
-                <div className="flex items-center gap-3 text-sm">
-                  <Phone className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
-                  <span className="text-muted-foreground">{person.whatsapp}</span>
+                <div>
+                  <p className="text-2xl font-bold text-primary">{contactPersons?.length || 0}</p>
+                  <p className="text-sm text-muted-foreground">Contact Person</p>
                 </div>
-              )}
-              {person.whatsapp && (
-                <Button asChild className="w-full" variant="default">
-                  <a
-                    href={`https://wa.me/${person.whatsapp.replace(/[^0-9]/g, "")}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <MessageCircle className="h-4 w-4 mr-2" />
-                    Hubungi via WhatsApp
-                  </a>
-                </Button>
-              )}
+              </div>
             </CardContent>
           </Card>
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4">
+                <div className="h-12 w-12 rounded-lg bg-accent/10 flex items-center justify-center">
+                  <MessageCircle className="h-6 w-6 text-accent" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-primary">24/7</p>
+                  <p className="text-sm text-muted-foreground">Siap Membantu</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4">
+                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <MapPin className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-primary">Yogyakarta</p>
+                  <p className="text-sm text-muted-foreground">Lokasi Kampus</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </AnimatedSection>
+
+      {/* Contact Persons Grid with Staggered Animation */}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {contactPersons?.map((person, index) => (
+          <StaggeredCard key={person.id} index={index}>
+            <Card className="hover:shadow-lg transition-shadow h-full">
+              <CardHeader className="text-center pb-4">
+                <div className="flex justify-center mb-4">
+                  <Avatar className="h-24 w-24">
+                    <AvatarImage src={person.photo_url || undefined} alt={person.name} />
+                    <AvatarFallback className="bg-primary text-primary-foreground text-2xl">
+                      {person.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
+                <CardTitle className="text-xl">{person.name}</CardTitle>
+                <CardDescription className="flex justify-center gap-2 mt-2">
+                  <Badge variant="default">{person.role}</Badge>
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {person.location && (
+                  <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                    <MapPin className="h-4 w-4 flex-shrink-0" />
+                    <span>{person.location}</span>
+                  </div>
+                )}
+                {person.whatsapp && (
+                  <div className="flex items-center gap-3 text-sm">
+                    <Phone className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                    <span className="text-muted-foreground">{person.whatsapp}</span>
+                  </div>
+                )}
+                {person.whatsapp && (
+                  <Button asChild className="w-full" variant="default">
+                    <a
+                      href={`https://wa.me/${person.whatsapp.replace(/[^0-9]/g, "")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <MessageCircle className="h-4 w-4 mr-2" />
+                      Hubungi via WhatsApp
+                    </a>
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
+          </StaggeredCard>
         ))}
       </div>
 
-      <div className="mt-16 bg-gradient-to-r from-primary via-[#B17D1D] to-[#8D5B1A] text-primary-foreground rounded-2xl p-8 md:p-12 text-center">
-        <h2 className="text-3xl font-bold mb-4 text-balance">Butuh Bantuan Lebih Lanjut?</h2>
-        <p className="text-lg text-primary-foreground/90 mb-6 max-w-2xl mx-auto text-pretty leading-relaxed">
-          Jangan ragu untuk menghubungi kakak-kakak Gamagma kami. Kami siap membantu menjawab semua pertanyaan tentang
-          UGM!
-        </p>
-        <div className="flex flex-wrap gap-4 justify-center">
-          <Button size="lg" asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
-            <a href="https://chat.whatsapp.com/GhImnHoDxKEEd3FueCZbcc" target="_blank" rel="noopener noreferrer">
-              <MessageCircle className="h-5 w-5 mr-2" />
-              WhatsApp Grup Calon Gamagma 2026
-            </a>
-          </Button>
+      {/* CTA Section */}
+      <AnimatedSection>
+        <div className="mt-16 bg-gradient-to-r from-primary via-[#B17D1D] to-[#8D5B1A] text-primary-foreground rounded-2xl p-8 md:p-12 text-center">
+          <h2 className="text-3xl font-bold mb-4 text-balance">Butuh Bantuan Lebih Lanjut?</h2>
+          <p className="text-lg text-primary-foreground/90 mb-6 max-w-2xl mx-auto text-pretty leading-relaxed">
+            Jangan ragu untuk menghubungi kakak-kakak Gamagma kami. Kami siap membantu menjawab semua pertanyaan tentang
+            UGM!
+          </p>
+          <div className="flex flex-wrap gap-4 justify-center">
+            <Button size="lg" asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
+              <a href="https://chat.whatsapp.com/GhImnHoDxKEEd3FueCZbcc" target="_blank" rel="noopener noreferrer">
+                <MessageCircle className="h-5 w-5 mr-2" />
+                WhatsApp Grup Calon Gamagma 2026
+              </a>
+            </Button>
+          </div>
         </div>
-      </div>
+      </AnimatedSection>
     </div>
   )
 }
