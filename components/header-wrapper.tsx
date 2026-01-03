@@ -1,6 +1,10 @@
 import { createClient } from "@/lib/supabase/server"
 import { Header } from "@/components/header"
 
+// Force dynamic rendering (disable caching)
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export async function HeaderWrapper() {
   const supabase = await createClient()
   
