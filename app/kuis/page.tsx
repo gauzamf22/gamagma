@@ -872,7 +872,7 @@ export default function KuisPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <AnimatedSection className="text-center mb-12 space-y-4">
-          <Badge className="bg-accent text-accent-foreground mb-4">Kuis Interaktif • Realtime Database</Badge>
+          <Badge className="bg-accent text-accent-foreground mb-4">Kuis Interaktif</Badge>
           <h1 className="text-4xl md:text-5xl font-bold text-balance">Kuis Pengetahuan UGM</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed">
             Uji pemahamanmu tentang Universitas Gadjah Mada! Jawab pertanyaan seputar sejarah, fakultas, wawasan, dan kehidupan kampus di UGM.
@@ -973,7 +973,6 @@ export default function KuisPage() {
                         <li>• Timer akan dimulai saat kamu klik tombol di bawah</li>
                         <li>• Kuis akan otomatis selesai jika waktu habis</li>
                         <li>• Pastikan koneksi internet stabil</li>
-                        <li>• Pertanyaan diambil langsung dari database realtime</li>
                       </ul>
                     </div>
                   </div>
