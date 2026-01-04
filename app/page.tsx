@@ -102,7 +102,7 @@ export default function HomePage() {
                   />
                   <div className="absolute -bottom-4 -right-4 bg-accent text-accent-foreground p-4 rounded-lg shadow-lg">
                     <p className="text-sm font-semibold">Halo! Saya SIMASTER</p>
-                    <p className="text-xs">Pemandu Website GAMAGMA UGM</p>
+                    <p className="text-xs">Pemandu Website Gamagma.com</p>
                   </div>
                 </div>
               </div>
