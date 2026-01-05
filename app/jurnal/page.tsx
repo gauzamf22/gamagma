@@ -76,7 +76,7 @@ export default function JurnalPage() {
       {/* Hero Section */}
       <div className="text-center mb-12 space-y-4">
         <Badge className="bg-accent text-accent-foreground mb-4">Jurnal Alumni</Badge>
-        <h1 className="text-4xl md:text-5xl font-bold text-balance">Cerita dari Alumni UGM</h1>
+        <h1 className="text-4xl md:text-5xl font-bold text-balance">Cerita dari Alumni MAN 2 Kota Malang di UGM</h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed">
           Baca pengalaman, tips, dan inspirasi dari alumni MAN 2 Kota Malang yang sudah menjadi bagian dari keluarga
           besar UGM
