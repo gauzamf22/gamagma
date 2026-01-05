@@ -119,9 +119,9 @@ export default function KontakPage() {
       id: 5,
       name: "Kak Fail",
       role: "Contact Person Gamagma",
-      location: "TRPL (Sekolah Vokasi) UGM",
+      location: "TRIK (Sekolah Vokasi) UGM",
       whatsapp: "+62 857-1631-8318",
-      photo_url: "/images/fail.jpeg",
+      photo_url: "/images/faillll.jpeg",
     },
     {
       id: 6,
