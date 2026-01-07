@@ -210,8 +210,17 @@ export default async function TrackRecordPage() {
         <h2 className="text-3xl font-bold mb-4 text-balance">Kamu Bisa Menjadi Bagian dari Mereka!</h2>
         <p className="text-lg text-primary-foreground/90 mb-6 max-w-2xl mx-auto text-pretty leading-relaxed">
           Alumni-alumni ini membuktikan bahwa dengan kerja keras dan dedikasi, impian kuliah di UGM bisa tercapai.
-          Bergabunglah dengan Gamagma dan wujudkan mimpimu!
-        </p>
+          Bergabunglah dengan UGM dan wujudkan impianmu! Untuk informasi lebih lanjut seputar jalur masuk UGM dan lainnya dapat diakses melalui link di bawah ini👇🏻
+
+        </p>        
+        <a
+          href="https://drive.google.com/file/d/1EtmhFufzadQMJRGcIBd4_YTFr36A-TIl/view?usp=sharing"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block bg-white text-accent font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition-colors"
+        >
+          Klik di sini guys!
+        </a>
       </div>
     </div>
   )
