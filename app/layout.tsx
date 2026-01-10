@@ -13,7 +13,6 @@ export const metadata: Metadata = {
   title: "Gamagma.com",
   description:
     "Platform informasi resmi untuk calon mahasiswa UGM dari MAN 2 Kota Malang. Dapatkan informasi lengkap mengenai jalur masuk, fakultas, dan kehidupan kampus di Universitas Gadjah Mada.",
-  generator: "Next.js",
   icons: {
     icon: [
       {
