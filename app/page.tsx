@@ -43,6 +43,108 @@ function AnimatedSection({ children, className = "" }) {
   )
 }
 
+const TypingText = ({ text, speed = 70, delay = 0 }) => {
+  const [displayText, setDisplayText] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [started, setStarted] = useState(false);
+
+  useEffect(() => {
+    const startTimeout = setTimeout(() => {
+      setStarted(true);
+    }, delay);
+
+    return () => clearTimeout(startTimeout);
+  }, [delay]);
+
+  useEffect(() => {
+    if (!started) return;
+
+    if (currentIndex < text.length) {
+      const timeout = setTimeout(() => {
+        setDisplayText(prev => prev + text[currentIndex]);
+        setCurrentIndex(prev => prev + 1);
+      }, speed);
+
+      return () => clearTimeout(timeout);
+    } else {
+      // Reset after completion
+      const resetTimeout = setTimeout(() => {
+        setDisplayText('');
+        setCurrentIndex(0);
+      }, 2000);
+
+      return () => clearTimeout(resetTimeout);
+    }
+  }, [currentIndex, text, speed, started]);
+
+  return (
+    <span className="inline-block">
+      {displayText}
+      {currentIndex < text.length && <span className="animate-pulse">|</span>}
+    </span>
+  );
+};
+
+const ComicBubble = () => {
+  const [showBubble, setShowBubble] = useState(false);
+  const [showText, setShowText] = useState(false);
+  const [animationKey, setAnimationKey] = useState(0);
+
+  useEffect(() => {
+    const runAnimation = () => {
+      // Reset
+      setShowBubble(false);
+      setShowText(false);
+
+      // Bubble muncul
+      const bubbleTimer = setTimeout(() => {
+        setShowBubble(true);
+      }, 500);
+
+      // Text muncul
+      const textTimer = setTimeout(() => {
+        setShowText(true);
+      }, 500);
+
+      // Reset untuk loop berikutnya
+      const resetTimer = setTimeout(() => {
+        setAnimationKey(prev => prev + 1);
+      }, 8000); // Total durasi sebelum repeat
+
+      return () => {
+        clearTimeout(bubbleTimer);
+        clearTimeout(textTimer);
+        clearTimeout(resetTimer);
+      };
+    };
+
+    const cleanup = runAnimation();
+    return cleanup;
+  }, [animationKey]);
+
+  return (
+    <div
+      key={animationKey}
+      className={`absolute -bottom-4 -right-4 bg-accent text-accent-foreground p-4 rounded-lg shadow-lg transition-all duration-500 ${
+        showBubble ? "opacity-100 scale-100" : "opacity-0 scale-0"
+      }`}
+      style={{ transformOrigin: "bottom left" }}
+    >
+      {/* Tail komik */}
+      <div className="absolute -left-2 bottom-4 w-0 h-0 border-t-[10px] border-t-transparent border-r-[15px] border-r-accent border-b-[10px] border-b-transparent" />
+      
+      {showText && (
+        <>
+          <p className="text-sm font-semibold animate-fade-in">Halo! Saya SIMASTER</p>
+          <p className="text-xs">
+            <TypingText text="Pemandu Website Gamagma.com" speed={80} delay={100} />
+          </p>
+        </>
+      )}
+    </div>
+  );
+};
+
 export default function HomePage() {
   const [selectedImage, setSelectedImage] = useState(null)
 
@@ -100,10 +202,7 @@ export default function HomePage() {
                     height={400}
                     className="w-full max-w-md h-auto drop-shadow-2xl"
                   />
-                  <div className="absolute -bottom-4 -right-4 bg-accent text-accent-foreground p-4 rounded-lg shadow-lg">
-                    <p className="text-sm font-semibold">Halo! Saya SIMASTER</p>
-                    <p className="text-xs">Pemandu Website Gamagma.com</p>
-                  </div>
+                  <ComicBubble />
                 </div>
               </div>
             </div>
