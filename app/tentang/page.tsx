@@ -174,7 +174,7 @@ export default function TentangPage() {
           <h2 className="text-3xl font-bold text-center mb-8">Peta Universitas Gadjah Mada</h2>
           <div className="rounded-2xl overflow-hidden shadow-lg">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126497.71331695371!2d110.29585689726562!3d-7.771515600000006!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59f1fb2f2b45%3A0x20986e2fe9c79cdd!2sUniversitas%20Gadjah%20Mada!5e0!3m2!1sid!2sid!4v1735373800000!5m2!1sid!2sid"
+              src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&amp;q=Universitas+Gadjah+Mada,Bulaksumur+Yogyakarta&amp;zoom=15"
               width="100%"
               height="450"
               style={{ border: 0 }}
