@@ -129,7 +129,7 @@ export default function KontakPage() {
       role: "Contact Person Gamagma",
       location: "Psikologi UGM",
       whatsapp: "+62 857-0466-3106",
-      photo_url: "/images/aya.jpeg",
+      photo_url: "/images/ay.jpeg",
     },
     {
       id: 7,
