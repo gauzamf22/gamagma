@@ -105,7 +105,7 @@ export default function KontakPage() {
       role: "Contact Person Gamagma",
       location: "Sekolah Vokasi UGM",
       whatsapp: "+62 822-3346-0383",
-      photo_url: "/images/lang - Copy.jpeg",
+      photo_url: "/images/gilang.jpeg",
     },
     {
       id: 4,
@@ -113,7 +113,7 @@ export default function KontakPage() {
       role: "Contact Person Gamagma",
       location: "Hukum UGM",
       whatsapp: "+62 821-4299-3647",
-      photo_url: "/images/r.jpeg",
+      photo_url: "/images/raasyid.jpeg",
     },
     {
       id: 5,
@@ -143,9 +143,9 @@ export default function KontakPage() {
       id: 8,
       name: "Kak Zizou",
       role: "Contact Person Gamagma",
-      location: "Geografi UGM",
+      location: "Kartografi & Penginderaan Jauh UGM",
       whatsapp: "+62 811-5642-120",
-      photo_url: "/images/z.jpeg",
+      photo_url: "/images/zizi123.jpeg",
     },
     {
       id: 9,
@@ -153,7 +153,7 @@ export default function KontakPage() {
       role: "Contact Person Gamagma",
       location: "Kedokteran UGM",
       whatsapp: "+62 813-3606-9554",
-      photo_url: "/images/tha.jpeg",
+      photo_url: "/images/athaaaa.jpeg",
     },
     {
       id: 10,
@@ -169,7 +169,7 @@ export default function KontakPage() {
       role: "Contact Person Gamagma",
       location: "Computer Science UGM",
       whatsapp: "+62 852-3621-1861",
-      photo_url: "/images/iqbal.jpeg",
+      photo_url: "/images/iqballll.jpeg",
     },
     {
       id: 12,
@@ -193,7 +193,7 @@ export default function KontakPage() {
       role: "Contact Person Gamagma",
       location: "Computer Science UGM",
       whatsapp: "+62 812-5204-9835",
-      photo_url: "/images/mey.jpeg",
+      photo_url: "/images/rameyza.jpeg",
     },
     {
       id: 15,
@@ -201,7 +201,7 @@ export default function KontakPage() {
       role: "Contact Person Gamagma",
       location: "Akuntansi UGM",
       whatsapp: "+62 878-8219-8175",
-      photo_url: "/images/cup.jpeg",
+      photo_url: "/images/apta.jpeg",
     },
     {
       id: 16,
