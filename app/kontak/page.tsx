@@ -169,7 +169,7 @@ export default function KontakPage() {
       role: "Contact Person Gamagma",
       location: "Computer Science UGM",
       whatsapp: "+62 852-3621-1861",
-      photo_url: "/images/iqballll.jpeg",
+      photo_url: "/images/iqbal.jpeg",
     },
     {
       id: 12,
